@@ -126,3 +126,67 @@
     .etl-section-title {
       font-family: var(--etl-serif);
       font-size: 1.75rem;
+      color: var(--etl-forest);
+      margin-bottom: 1.5rem;
+      padding-bottom: 0.5rem;
+      border-bottom: 2px solid var(--etl-sage);
+      display: inline-block;
+    }
+    .etl-card {
+      background: var(--etl-card);
+      border: 1px solid var(--etl-border);
+      border-radius: var(--etl-radius);
+      padding: 1.5rem;
+      margin-bottom: 1rem;
+      box-shadow: var(--etl-shadow);
+      transition: box-shadow var(--etl-transition);
+    }
+    .etl-card:hover { box-shadow: 0 8px 28px rgba(61, 74, 52, 0.12); }
+    .etl-card h3 {
+      font-size: 1.15rem;
+      color: var(--etl-olive);
+      margin-bottom: 0.5rem;
+    }
+    .etl-card p { color: var(--etl-muted); font-size: 0.95rem; }
+    .etl-grid {
+      display: grid;
+      grid-template-columns: repeat(auto-fill, minmax(280px, 1fr));
+      gap: 1.25rem;
+    }
+    .etl-herb-list { list-style: none; }
+    .etl-herb-list li {
+      padding: 0.6rem 0;
+      border-bottom: 1px solid var(--etl-border);
+      display: flex;
+      justify-content: space-between;
+      align-items: center;
+      flex-wrap: wrap;
+      gap: 0.5rem;
+    }
+    .etl-herb-list li:last-child { border-bottom: none; }
+    .etl-herb-name { font-weight: 600; color: var(--etl-forest); }
+    .etl-herb-tag { font-size: 0.8rem; color: var(--etl-sage); background: rgba(157, 170, 140, 0.2); padding: 0.2rem 0.5rem; border-radius: 6px; }
+    .etl-wallet-box {
+      background: linear-gradient(135deg, rgba(61, 74, 52, 0.06) 0%, rgba(184, 92, 56, 0.06) 100%);
+      border: 1px solid var(--etl-sage);
+      border-radius: var(--etl-radius);
+      padding: 1.5rem;
+      margin-top: 1rem;
+    }
+    .etl-wallet-box h3 { margin-bottom: 0.75rem; color: var(--etl-forest); }
+    .etl-addr {
+      font-family: ui-monospace, monospace;
+      font-size: 0.8rem;
+      word-break: break-all;
+      color: var(--etl-muted);
+      margin: 0.5rem 0;
+    }
+    .etl-status { font-size: 0.9rem; margin-bottom: 0.5rem; }
+    .etl-status.connected { color: var(--etl-olive); font-weight: 600; }
+    .etl-status.disconnected { color: var(--etl-muted); }
+    .etl-input {
+      width: 100%;
+      font-family: var(--etl-font);
+      font-size: 0.95rem;
+      padding: 0.6rem 0.9rem;
+      border: 1px solid var(--etl-border);
