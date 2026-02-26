@@ -62,3 +62,67 @@
     .etl-nav {
       display: flex;
       gap: 1.5rem;
+      align-items: center;
+    }
+    .etl-nav a {
+      color: var(--etl-olive);
+      text-decoration: none;
+      font-weight: 600;
+      font-size: 0.95rem;
+      transition: color var(--etl-transition);
+    }
+    .etl-nav a:hover { color: var(--etl-terracotta); }
+    .etl-btn {
+      font-family: var(--etl-font);
+      font-weight: 600;
+      padding: 0.6rem 1.2rem;
+      border-radius: var(--etl-radius);
+      border: none;
+      cursor: pointer;
+      transition: background var(--etl-transition), transform 0.15s ease;
+      font-size: 0.9rem;
+    }
+    .etl-btn-primary {
+      background: var(--etl-forest);
+      color: var(--etl-cream);
+    }
+    .etl-btn-primary:hover {
+      background: var(--etl-olive);
+      transform: translateY(-1px);
+    }
+    .etl-btn-outline {
+      background: transparent;
+      color: var(--etl-forest);
+      border: 2px solid var(--etl-sage);
+    }
+    .etl-btn-outline:hover {
+      background: var(--etl-sage);
+      color: var(--etl-cream);
+    }
+    .etl-hero {
+      padding: 4rem 0;
+      text-align: center;
+      background: linear-gradient(180deg, rgba(157, 170, 140, 0.12) 0%, transparent 60%);
+      border-radius: 0 0 24px 24px;
+    }
+    .etl-hero h1 {
+      font-family: var(--etl-serif);
+      font-size: clamp(2rem, 5vw, 3rem);
+      color: var(--etl-forest);
+      margin-bottom: 0.75rem;
+      line-height: 1.2;
+    }
+    .etl-hero p {
+      font-size: 1.15rem;
+      color: var(--etl-muted);
+      max-width: 560px;
+      margin: 0 auto 1.5rem;
+    }
+    .etl-section {
+      padding: 3rem 0;
+      border-bottom: 1px solid var(--etl-border);
+    }
+    .etl-section:last-of-type { border-bottom: none; }
+    .etl-section-title {
+      font-family: var(--etl-serif);
+      font-size: 1.75rem;
