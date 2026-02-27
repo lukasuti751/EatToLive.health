@@ -254,3 +254,67 @@
       border-left: 4px solid var(--etl-terracotta);
       padding-left: 1rem;
       margin: 1rem 0;
+    }
+    .etl-tip {
+      background: rgba(157, 170, 140, 0.15);
+      border-radius: 8px;
+      padding: 1rem;
+      margin: 1rem 0;
+      font-size: 0.9rem;
+      color: var(--etl-forest);
+    }
+    .etl-tip strong { color: var(--etl-olive); }
+    .etl-table { width: 100%; border-collapse: collapse; font-size: 0.9rem; }
+    .etl-table th, .etl-table td { padding: 0.5rem 0.75rem; border-bottom: 1px solid var(--etl-border); text-align: left; }
+    .etl-table th { color: var(--etl-olive); font-weight: 600; }
+    .etl-mono { font-family: ui-monospace, monospace; font-size: 0.8rem; }
+    .etl-small { font-size: 0.85rem; color: var(--etl-muted); }
+    .etl-divider { height: 1px; background: var(--etl-border); margin: 1.5rem 0; }
+    .etl-faq-item { margin-bottom: 1rem; }
+    .etl-faq-item h4 { color: var(--etl-forest); font-size: 1rem; margin-bottom: 0.35rem; }
+    .etl-faq-item p { color: var(--etl-muted); font-size: 0.9rem; }
+    .etl-bullets { padding-left: 1.25rem; margin: 0.5rem 0; }
+    .etl-bullets li { margin-bottom: 0.25rem; color: var(--etl-muted); }
+    .etl-campaign-card { border-left: 4px solid var(--etl-terracotta); padding-left: 1rem; margin: 1rem 0; }
+    @media (max-width: 640px) {
+      .etl-hero { padding: 2.5rem 0; }
+      .etl-nav { flex-wrap: wrap; }
+      .etl-grid { grid-template-columns: 1fr; }
+    }
+  </style>
+</head>
+<body>
+  <header class="etl-header">
+    <div class="etl-wrap">
+      <div class="etl-header-inner">
+        <a href="#" class="etl-logo">EatToLive<span>.health</span></a>
+        <nav class="etl-nav">
+          <a href="#herbs">Herbs</a>
+          <a href="#benefits">Benefits</a>
+          <a href="#seasonal">Seasonal</a>
+          <a href="#remedies">Remedies</a>
+          <a href="#vitality">Vitality</a>
+          <a href="#ledger">Ledger</a>
+          <button type="button" class="etl-btn etl-btn-primary" id="etl-connect-btn">Connect wallet</button>
+        </nav>
+      </div>
+    </div>
+  </header>
+
+  <main>
+    <section class="etl-hero">
+      <div class="etl-wrap">
+        <h1>Herb guide for natural and healthy living</h1>
+        <p>Discover herbs, remedies and vitality. Log attestations on-chain with Herbo and grow your wellness ledger.</p>
+        <button type="button" class="etl-btn etl-btn-outline" id="etl-scroll-herbs">Explore herbs</button>
+      </div>
+    </section>
+
+    <section class="etl-section" id="herbs">
+      <div class="etl-wrap">
+        <h2 class="etl-section-title">Herbs at a glance</h2>
+        <p style="color: var(--etl-muted); margin-bottom: 1.5rem;">A short reference for common herbs and their traditional uses. Always consult a practitioner for health decisions.</p>
+        <div class="etl-grid">
+          <div class="etl-card">
+            <h3>Basil</h3>
+            <p>Antioxidant, anti-inflammatory. Supports digestion and stress relief. Use in teas or fresh in meals.</p>
