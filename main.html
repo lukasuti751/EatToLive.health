@@ -766,3 +766,67 @@ const categoryHash = ethers.keccak256(ethers.toUtf8Bytes("Digestive"));
       document.getElementById("etl-scroll-herbs").addEventListener("click", function() {
         document.getElementById("herbs").scrollIntoView({ behavior: "smooth" });
       });
+
+      document.querySelectorAll(".etl-tab").forEach(function(tab) {
+        tab.addEventListener("click", function() {
+          const panelId = "etl-panel-" + this.getAttribute("data-panel");
+          document.querySelectorAll(".etl-tab").forEach(function(t) { t.classList.remove("active"); });
+          document.querySelectorAll(".etl-panel").forEach(function(p) { p.classList.remove("active"); });
+          this.classList.add("active");
+          const panel = document.getElementById(panelId);
+          if (panel) panel.classList.add("active");
+        });
+      });
+
+      document.getElementById("etl-contract-addr").addEventListener("change", function() {
+        setContractAddress(this.value.trim());
+      });
+
+      document.getElementById("etl-get-digest").addEventListener("click", async function() {
+        const c = getContract();
+        if (!c) { out("etl-digest-output", "Set contract address and connect wallet."); return; }
+        try {
+          const r = await c.getLedgerDigest();
+          out("etl-digest-output", "totalEntries: " + r.totalEntries.toString() + "\ntotalCategories: " + r.totalCategories.toString() + "\ntreasuryAccum: " + r.treasuryAccum.toString() + "\ndeployBlockNum: " + r.deployBlockNum.toString() + "\npaused: " + r.paused);
+        } catch (e) {
+          out("etl-digest-output", "Error: " + (e.message || String(e)));
+        }
+      });
+
+      document.getElementById("etl-get-entry").addEventListener("click", async function() {
+        const c = getContract();
+        const id = document.getElementById("etl-entry-id").value.trim();
+        if (!c) { out("etl-entry-output", "Set contract address and connect wallet."); return; }
+        if (!id) { out("etl-entry-output", "Enter entry ID."); return; }
+        try {
+          const r = await c.getEntry(id);
+          out("etl-entry-output", "contributor: " + r.contributor + "\nnameHash: " + r.nameHash + "\nbenefitHash: " + r.benefitHash + "\ncategoryHash: " + r.categoryHash + "\nloggedAtBlock: " + r.loggedAtBlock.toString() + "\noptionalWei: " + r.optionalWei.toString() + "\nactive: " + r.active + "\nnoteHash: " + r.noteHash);
+        } catch (e) {
+          out("etl-entry-output", "Error: " + (e.message || String(e)));
+        }
+      });
+
+      document.getElementById("etl-get-vitality").addEventListener("click", async function() {
+        const c = getContract();
+        let addr = document.getElementById("etl-vitality-addr").value.trim();
+        if (!c) { out("etl-vitality-output", "Set contract address and connect wallet."); return; }
+        if (!addr && signer) addr = (await signer.getAddress());
+        if (!addr) { out("etl-vitality-output", "Enter address or connect wallet."); return; }
+        try {
+          const bal = await c.vitalityBalance(addr);
+          out("etl-vitality-output", "Vitality balance: " + bal.toString());
+        } catch (e) {
+          out("etl-vitality-output", "Error: " + (e.message || String(e)));
+        }
+      });
+
+      document.getElementById("etl-log-herb").addEventListener("click", async function() {
+        const c = getContract();
+        if (!c || !signer) { out("etl-log-output", "Connect wallet and set contract address."); return; }
+        const nameHash = document.getElementById("etl-log-name").value.trim();
+        const benefitHash = document.getElementById("etl-log-benefit").value.trim();
+        const categoryHash = document.getElementById("etl-log-category").value.trim();
+        if (!nameHash || !benefitHash || !categoryHash) { out("etl-log-output", "Fill name, benefit and category hashes (0x...)."); return; }
+        try {
+          const tx = await c.logHerbFree(nameHash, benefitHash, categoryHash);
+          out("etl-log-output", "Tx hash: " + tx.hash + "\nWaiting for confirmation...");
