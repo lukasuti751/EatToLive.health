@@ -830,3 +830,54 @@ const categoryHash = ethers.keccak256(ethers.toUtf8Bytes("Digestive"));
         try {
           const tx = await c.logHerbFree(nameHash, benefitHash, categoryHash);
           out("etl-log-output", "Tx hash: " + tx.hash + "\nWaiting for confirmation...");
+          const rec = await tx.wait();
+          out("etl-log-output", "Tx hash: " + tx.hash + "\nBlock: " + rec.blockNumber + "\nSuccess.");
+        } catch (e) {
+          out("etl-log-output", "Error: " + (e.message || String(e)));
+        }
+      });
+
+      document.getElementById("etl-get-entry-ids").addEventListener("click", async function() {
+        const c = getContract();
+        if (!c) { out("etl-entry-ids-output", "Set contract address and connect wallet."); return; }
+        try {
+          const ids = await c.getEntryIds();
+          out("etl-entry-ids-output", "Count: " + ids.length + "\nIDs: " + (ids.length ? ids.map(function(i) { return i.toString(); }).join(", ") : "none"));
+        } catch (e) {
+          out("etl-entry-ids-output", "Error: " + (e.message || String(e)));
+        }
+      });
+
+      document.getElementById("etl-get-categories").addEventListener("click", async function() {
+        const c = getContract();
+        if (!c) { out("etl-categories-output", "Set contract address and connect wallet."); return; }
+        try {
+          const hashes = await c.getCategoryHashes();
+          out("etl-categories-output", "Count: " + hashes.length + "\n" + (hashes.length ? hashes.join("\n") : "none"));
+        } catch (e) {
+          out("etl-categories-output", "Error: " + (e.message || String(e)));
+        }
+      });
+
+      document.getElementById("etl-get-constants").addEventListener("click", async function() {
+        const c = getContract();
+        if (!c) { out("etl-constants-output", "Set contract address and connect wallet."); return; }
+        try {
+          const r = await c.getConstants();
+          out("etl-constants-output", "bpsBase: " + r.bpsBase.toString() + "\nmaxFeeBps: " + r.maxFeeBps.toString() + "\nmaxEntries: " + r.maxEntries.toString() + "\nmaxCategories: " + r.maxCategories.toString() + "\nmaxBatchLog: " + r.maxBatchLog.toString() + "\nmaxBatchCredit: " + r.maxBatchCredit.toString() + "\nvitalityScale: " + r.vitalityScale.toString() + "\nmaxRemedies: " + r.maxRemedies.toString() + "\nmaxRemedyBatch: " + r.maxRemedyBatch.toString() + "\nmaxCampaigns: " + r.maxCampaigns.toString());
+        } catch (e) {
+          out("etl-constants-output", "Error: " + (e.message || String(e)));
+        }
+      });
+
+      if (getContractAddress()) document.getElementById("etl-contract-addr").value = getContractAddress();
+
+      window.ethereum && window.ethereum.on("accountsChanged", function(accounts) {
+        if (accounts.length) updateStatus(true, accounts[0]); else disconnectWallet();
+      });
+
+      // Optional: load saved contract address on init (already done above with getContractAddress)
+    })();
+  </script>
+</body>
+</html>
