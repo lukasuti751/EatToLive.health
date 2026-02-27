@@ -574,3 +574,67 @@
             <p class="etl-small" style="margin-top: 0.75rem;">All constructor addresses are randomly generated per deployment and are not reused from other contracts.</p>
             <h4 style="margin-top: 1rem; color: var(--etl-olive); font-size: 0.95rem;">Storage limits (constants)</h4>
             <p class="etl-small">HRB_MAX_ENTRIES: 2500 · HRB_MAX_CATEGORIES: 180 · HRB_MAX_REMEDIES: 1200 · HRB_MAX_CAMPAIGNS: 95 · HRB_MAX_BATCH_LOG: 35 · HRB_MAX_BATCH_CREDIT: 45 · HRB_MAX_REMEDY_BATCH: 28 · HRB_MAX_FEE_BPS: 500. Use getConstants() to read from chain.</p>
+          </div>
+        </div>
+      </div>
+    </section>
+
+    <section class="etl-section">
+      <div class="etl-wrap">
+        <h2 class="etl-section-title">Campaigns</h2>
+        <p style="color: var(--etl-muted); margin-bottom: 1rem;">On Herbo, campaigns are time-bound (start block, end block). The curator creates them; contributors can join entries to a campaign while it is active. Use <code class="etl-mono">joinEntryToCampaign(entryId, campaignId)</code> from the contract.</p>
+        <div class="etl-campaign-card">
+          <h4>How to join</h4>
+          <p>You must be the contributor of the herb entry. The campaign must exist and the current block must be between start and end. Each entry can join at most one campaign.</p>
+        </div>
+      </div>
+    </section>
+
+    <section class="etl-section">
+      <div class="etl-wrap">
+        <h2 class="etl-section-title">About EatToLive.health</h2>
+        <p style="color: var(--etl-muted); max-width: 640px; margin-bottom: 1.5rem;">EatToLive.health is the web interface for the Herbo on-chain wellness ledger. Herbo lets contributors log herb entries (name, benefit, category hashes), attach wellness notes, create remedies linked to entries, and join campaigns. The curator credits vitality; the wellness keeper can remove entries when needed. All data is stored on the EVM chain you deploy to. This site is for education and interaction only; it does not provide medical advice.</p>
+        <h3 style="color: var(--etl-forest); font-size: 1.1rem; margin-bottom: 0.75rem;">FAQ</h3>
+        <div class="etl-faq-item">
+          <h4>What is Herbo?</h4>
+          <p>Herbo is a Solidity contract (EVM) that acts as a wellness ledger. Users log herb entries (with name, benefit and category hashes), link remedies to entries, and earn vitality points when the curator credits them. No token is transferred; vitality is on-chain state.</p>
+        </div>
+        <div class="etl-faq-item">
+          <h4>Why hashes instead of plain text?</h4>
+          <p>Storing keccak256 hashes keeps the chain compact and allows off-chain storage of the actual names and benefits. Front-ends and indexers can map hashes to labels. It also keeps the contract language-agnostic.</p>
+        </div>
+        <div class="etl-faq-item">
+          <h4>Who is the curator?</h4>
+          <p>The curator address is set at deployment (immutable). Only that address can register categories, credit vitality, and create campaigns. The contract owner can pause the ledger and set fee BPS and vitality rate.</p>
+        </div>
+        <div class="etl-faq-item">
+          <h4>Can I log a herb without paying?</h4>
+          <p>Yes. Use <code class="etl-mono">logHerbFree(nameHash, benefitHash, categoryHash)</code>. The category must already be registered by the curator. Optional wei can be sent with <code class="etl-mono">logHerb</code>; a fee percentage goes to the treasury.</p>
+        </div>
+        <div class="etl-faq-item">
+          <h4>What are remedies?</h4>
+          <p>Remedies link a title (hash) to an existing herb entry. You can log a remedy with <code class="etl-mono">logRemedy(titleHash, herbEntryIdRef)</code>. Batch logging is also supported. Remedies can be updated or removed by the author or the wellness keeper.</p>
+        </div>
+        <div class="etl-faq-item">
+          <h4>Is this medical advice?</h4>
+          <p>No. The herb guide and remedy ideas on this site are for general interest only. Always consult a qualified healthcare provider before using herbs for health purposes.</p>
+        </div>
+        <div class="etl-divider"></div>
+        <h3 style="color: var(--etl-forest); font-size: 1.1rem; margin-bottom: 0.75rem;">Safety &amp; disclaimer</h3>
+        <ul class="etl-bullets">
+          <li>Herbs can interact with medications. Always inform your doctor about supplements and herbs you use.</li>
+          <li>Pregnancy, breastfeeding and certain health conditions require extra caution. Seek professional guidance.</li>
+          <li>Quality and sourcing matter. Prefer reputable suppliers and correct botanical identification.</li>
+          <li>Start with small amounts when trying a new herb. Discontinue and seek help if you experience adverse effects.</li>
+        </ul>
+        <div class="etl-divider"></div>
+        <h3 style="color: var(--etl-forest); font-size: 1.1rem; margin-bottom: 0.75rem;">How to compute hashes for the Ledger</h3>
+        <p style="color: var(--etl-muted); font-size: 0.9rem; margin-bottom: 0.5rem;">To log an herb you need bytes32 nameHash, benefitHash and categoryHash. Off-chain (e.g. in JavaScript with ethers):</p>
+        <pre class="etl-output" style="margin-top: 0.5rem; font-size: 0.75rem;">// Example with ethers v6
+import { ethers } from "ethers";
+const nameHash = ethers.keccak256(ethers.toUtf8Bytes("Basil"));
+const benefitHash = ethers.keccak256(ethers.toUtf8Bytes("Digestive support"));
+const categoryHash = ethers.keccak256(ethers.toUtf8Bytes("Digestive"));
+// Then call contract.logHerbFree(nameHash, benefitHash, categoryHash);</pre>
+        <p style="color: var(--etl-muted); font-size: 0.85rem; margin-top: 0.75rem;">Categories must be registered on the contract by the curator before you can log entries in that category.</p>
+        <div class="etl-divider"></div>
