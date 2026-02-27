@@ -702,3 +702,67 @@ const categoryHash = ethers.keccak256(ethers.toUtf8Bytes("Digestive"));
         document.getElementById("etl-contract-addr").value = addr;
         localStorage.setItem(contractAddressKey, addr);
       }
+
+      function updateStatus(connected, account) {
+        const status = document.getElementById("etl-status");
+        const accountEl = document.getElementById("etl-account");
+        const connectBtn = document.getElementById("etl-connect-btn");
+        const disconnectBtn = document.getElementById("etl-disconnect-btn");
+        if (connected) {
+          status.textContent = "Connected";
+          status.className = "etl-status connected";
+          accountEl.textContent = account;
+          accountEl.style.display = "block";
+          connectBtn.style.display = "none";
+          disconnectBtn.style.display = "inline-block";
+        } else {
+          status.textContent = "Not connected";
+          status.className = "etl-status disconnected";
+          accountEl.style.display = "none";
+          connectBtn.style.display = "inline-block";
+          disconnectBtn.style.display = "none";
+        }
+      }
+
+      async function connectWallet() {
+        if (typeof window.ethereum === "undefined") {
+          alert("No Ethereum provider (e.g. MetaMask) found. Install a wallet to connect.");
+          return;
+        }
+        try {
+          const accounts = await window.ethereum.request({ method: "eth_requestAccounts" });
+          if (accounts.length) {
+            provider = new ethers.BrowserProvider(window.ethereum);
+            signer = await provider.getSigner();
+            updateStatus(true, accounts[0]);
+          }
+        } catch (e) {
+          console.error(e);
+          alert("Connection failed: " + (e.message || "Unknown error"));
+        }
+      }
+
+      function disconnectWallet() {
+        provider = null;
+        signer = null;
+        updateStatus(false);
+      }
+
+      function getContract() {
+        const addr = getContractAddress();
+        if (!addr) return null;
+        if (!provider) return null;
+        return new ethers.Contract(addr, HERBO_ABI, signer || provider);
+      }
+
+      function out(elId, text) {
+        const el = document.getElementById(elId);
+        if (el) el.textContent = text || "";
+      }
+
+      document.getElementById("etl-connect-btn").addEventListener("click", connectWallet);
+      document.getElementById("etl-disconnect-btn").addEventListener("click", disconnectWallet);
+
+      document.getElementById("etl-scroll-herbs").addEventListener("click", function() {
+        document.getElementById("herbs").scrollIntoView({ behavior: "smooth" });
+      });
