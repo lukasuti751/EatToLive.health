@@ -446,3 +446,67 @@
           <div class="etl-card">
             <h3>Calming tea blend</h3>
             <p>Chamomile + lavender + lemon balm. Steep 5–7 minutes. Best in the evening.</p>
+          </div>
+          <div class="etl-card">
+            <h3>Digestive aid</h3>
+            <p>Ginger + peppermint. Fresh ginger root and peppermint leaves as tea after meals.</p>
+          </div>
+          <div class="etl-card">
+            <h3>Golden milk</h3>
+            <p>Turmeric + black pepper + ginger. Warm milk or plant-based. Anti-inflammatory support.</p>
+          </div>
+        </div>
+        <p style="color: var(--etl-muted); font-size: 0.9rem;">These are for general interest only. Consult a healthcare provider before starting any herbal regimen.</p>
+      </div>
+    </section>
+
+    <section class="etl-section" id="vitality">
+      <div class="etl-wrap">
+        <h2 class="etl-section-title">Vitality points</h2>
+        <p style="color: var(--etl-muted); margin-bottom: 1.5rem;">On Herbo, the curator credits vitality to contributors. You can spend vitality with a reason hash (e.g. for rewards or governance).</p>
+        <div class="etl-card">
+          <h3>How vitality works</h3>
+          <p>Vitality is an on-chain balance per address. The curator credits it after reviewing herb entries or for campaign participation. No token transfer; it is internal ledger state. Use <code>spendVitality(amount, reasonHash)</code> to deduct with a reason.</p>
+        </div>
+      </div>
+    </section>
+
+    <section class="etl-section" id="ledger">
+      <div class="etl-wrap">
+        <h2 class="etl-section-title">Herbo ledger <span class="etl-badge">EVM</span></h2>
+        <p style="color: var(--etl-muted); margin-bottom: 1rem;">Connect your wallet and read/write the Herbo contract. Contract address and ABI are configured below (replace with your deployment).</p>
+
+        <div class="etl-wallet-box">
+          <h3>Wallet</h3>
+          <p class="etl-status disconnected" id="etl-status">Not connected</p>
+          <p id="etl-account" class="etl-addr" style="display:none;"></p>
+          <button type="button" class="etl-btn etl-btn-outline" id="etl-disconnect-btn" style="display:none;">Disconnect</button>
+        </div>
+
+        <div class="etl-tabs">
+          <button type="button" class="etl-tab active" data-panel="read">Read</button>
+          <button type="button" class="etl-tab" data-panel="write">Write</button>
+          <button type="button" class="etl-tab" data-panel="config">Config</button>
+        </div>
+
+        <div id="etl-panel-read" class="etl-panel active">
+          <div class="etl-card">
+            <h3>Ledger digest</h3>
+            <p class="etl-label">Get total entries, categories, treasury accum, deploy block, paused.</p>
+            <button type="button" class="etl-btn etl-btn-primary" id="etl-get-digest">Get digest</button>
+            <pre class="etl-output" id="etl-digest-output"></pre>
+          </div>
+          <div class="etl-card">
+            <h3>Entry by ID</h3>
+            <label class="etl-label">Entry ID</label>
+            <input type="number" class="etl-input" id="etl-entry-id" placeholder="1" min="1" />
+            <button type="button" class="etl-btn etl-btn-primary" id="etl-get-entry">Get entry</button>
+            <pre class="etl-output" id="etl-entry-output"></pre>
+          </div>
+          <div class="etl-card">
+            <h3>Vitality balance</h3>
+            <label class="etl-label">Address</label>
+            <input type="text" class="etl-input" id="etl-vitality-addr" placeholder="0x..." />
+            <button type="button" class="etl-btn etl-btn-primary" id="etl-get-vitality">Get vitality</button>
+            <pre class="etl-output" id="etl-vitality-output"></pre>
+          </div>
