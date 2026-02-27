@@ -638,3 +638,67 @@ const categoryHash = ethers.keccak256(ethers.toUtf8Bytes("Digestive"));
 // Then call contract.logHerbFree(nameHash, benefitHash, categoryHash);</pre>
         <p style="color: var(--etl-muted); font-size: 0.85rem; margin-top: 0.75rem;">Categories must be registered on the contract by the curator before you can log entries in that category.</p>
         <div class="etl-divider"></div>
+        <h3 style="color: var(--etl-forest); font-size: 1.1rem; margin-bottom: 0.75rem;">Remedy workflow on Herbo</h3>
+        <p style="color: var(--etl-muted); font-size: 0.9rem;">First log one or more herb entries with logHerbFree. Then call logRemedy(titleHash, herbEntryIdRef) to link a remedy title to an entry. You can batch log remedies with batchLogRemedies. To update a remedy title use updateRemedyTitle(remedyId, newTitleHash); only the author can update. The wellness keeper can remove entries or remedies when needed. Campaigns are created by the curator with start and end blocks; contributors join entries via joinEntryToCampaign.</p>
+        <p style="color: var(--etl-muted); font-size: 0.85rem; margin-top: 0.5rem;">Herbo is designed for any EVM mainnet or testnet. Deploy once; curator, treasury and wellnessKeeper are fixed. Use a wallet that supports the chain you deployed to.</p>
+        <div class="etl-divider"></div>
+        <h3 style="color: var(--etl-forest); font-size: 1.1rem; margin-bottom: 0.75rem;">Glossary</h3>
+        <ul class="etl-bullets">
+          <li><strong>Herb entry</strong> — A single on-chain record: contributor, nameHash, benefitHash, categoryHash, block, optional wei, active flag, optional noteHash.</li>
+          <li><strong>Category</strong> — A registered bytes32 category hash with a label hash and entry count. Only the curator can register or update labels.</li>
+          <li><strong>Remedy</strong> — A title hash linked to one herb entry (herbEntryIdRef). Used for recipes or combinations.</li>
+          <li><strong>Vitality</strong> — On-chain balance per address, credited by the curator. Can be spent with a reason hash.</li>
+          <li><strong>Campaign</strong> — Time-bound period (start block, end block). Entries can join at most one campaign while it is active.</li>
+          <li><strong>Donation fee</strong> — When logging with optional wei (logHerb), a percentage (donationFeeBps) goes to treasury; the rest can be used per contract logic.</li>
+        </ul>
+        <p style="color: var(--etl-muted); font-size: 0.85rem; margin-top: 0.75rem;">For full contract API see the Herbo Solidity source. Events include HerbLogged, VitalityCredited, RemedyLogged, CampaignCreated, EntryJoinedCampaign and others. Errors use the HRB_ prefix (e.g. HRB_EntryNotFound, HRB_NotCurator).</p>
+        <h3 style="color: var(--etl-forest); font-size: 1rem; margin-top: 1.25rem; margin-bottom: 0.5rem;">Resources</h3>
+        <ul class="etl-bullets">
+          <li>Herbo contract (Solidity) — deploy on any EVM chain; constructor sets curator, treasury, wellnessKeeper.</li>
+          <li>HerbIT — Python CLI companion app for herb lookup and ledger helpers (see project folder).</li>
+          <li>Ethers.js or web3.js — for hashing (keccak256) and sending transactions from the browser.</li>
+        </ul>
+        <p style="color: var(--etl-muted); font-size: 0.85rem; margin-top: 0.5rem;">This interface does not store your private keys. Wallet connection is via the browser extension; contract address is stored locally for convenience.</p>
+        <p style="color: var(--etl-muted); font-size: 0.85rem; margin-top: 0.5rem;">To deploy Herbo: compile with Solidity 0.8.24, link OpenZeppelin ReentrancyGuard, Pausable, Ownable. Pass no constructor args; curator, treasury and wellnessKeeper are hardcoded in the contract. After deployment, the owner should register categories (registerCategory) so users can log herbs.</p>
+        <p style="color: var(--etl-muted); font-size: 0.85rem; margin-top: 0.5rem;">EatToLive.health and Herbo are part of the same project. The website provides a herb guide and a minimal Ledger UI; for batch operations and full API use the contract directly or the HerbIT Python app.</p>
+        <p style="color: var(--etl-muted); font-size: 0.8rem; margin-top: 0.75rem;">© EatToLive.health. No warranty. Herbo contract is provided as-is. Use at your own risk on mainnet.</p>
+        <p style="color: var(--etl-muted); font-size: 0.8rem;">For herb lookup by name or benefit, use the HerbIT app command-line interface.</p>
+        <p style="color: var(--etl-muted); font-size: 0.8rem;">Ledger domain and salt are derived at deployment for chain-specific identity.</p>
+      </div>
+    </section>
+  </main>
+
+  <footer class="etl-footer">
+    <div class="etl-wrap">
+      <p>EatToLive.health — Herb guide for natural and healthy living. Powered by <a href="#">Herbo</a>.</p>
+      <p style="margin-top: 0.5rem; font-size: 0.8rem;">Not medical advice. Consult a healthcare provider before using herbs. Herbo contract addresses (curator, treasury, wellnessKeeper) are set at deployment and are immutable.</p>
+    </div>
+  </footer>
+
+  <script>
+    // EatToLive.health — Herbo ledger UI. Uses ethers.js for wallet and contract calls.
+    // Contract address is stored in localStorage (etl_herbo_contract). Replace with your deployment.
+    (function() {
+      const contractAddressKey = "etl_herbo_contract";
+      let provider = null;
+      let signer = null;
+      let contract = null;
+
+      const HERBO_ABI = [
+        "function getLedgerDigest() view returns (uint256 totalEntries, uint256 totalCategories, uint256 treasuryAccum, uint256 deployBlockNum, bool paused)",
+        "function getEntry(uint256 entryId) view returns (address contributor, bytes32 nameHash, bytes32 benefitHash, bytes32 categoryHash, uint256 loggedAtBlock, uint256 optionalWei, bool active, bytes32 noteHash)",
+        "function vitalityBalance(address) view returns (uint256)",
+        "function logHerbFree(bytes32 nameHash, bytes32 benefitHash, bytes32 categoryHash) returns (uint256 entryId)",
+        "function getEntryIds() view returns (uint256[])",
+        "function getCategoryHashes() view returns (bytes32[])",
+        "function getConstants() view returns (uint256 bpsBase, uint256 maxFeeBps, uint256 maxEntries, uint256 maxCategories, uint256 maxBatchLog, uint256 maxBatchCredit, uint256 vitalityScale, uint256 maxRemedies, uint256 maxRemedyBatch, uint256 maxCampaigns)"
+      ];
+
+      function getContractAddress() {
+        return document.getElementById("etl-contract-addr").value.trim() || localStorage.getItem(contractAddressKey) || "";
+      }
+
+      function setContractAddress(addr) {
+        document.getElementById("etl-contract-addr").value = addr;
+        localStorage.setItem(contractAddressKey, addr);
+      }
