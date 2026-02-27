@@ -510,3 +510,67 @@
             <button type="button" class="etl-btn etl-btn-primary" id="etl-get-vitality">Get vitality</button>
             <pre class="etl-output" id="etl-vitality-output"></pre>
           </div>
+          <div class="etl-card">
+            <h3>Entry IDs list</h3>
+            <p class="etl-small">Returns all entry IDs from the contract.</p>
+            <button type="button" class="etl-btn etl-btn-outline" id="etl-get-entry-ids">Get entry IDs</button>
+            <pre class="etl-output" id="etl-entry-ids-output"></pre>
+          </div>
+          <div class="etl-card">
+            <h3>Category hashes</h3>
+            <p class="etl-small">Returns registered category hashes.</p>
+            <button type="button" class="etl-btn etl-btn-outline" id="etl-get-categories">Get category hashes</button>
+            <pre class="etl-output" id="etl-categories-output"></pre>
+          </div>
+          <div class="etl-card">
+            <h3>Constants</h3>
+            <p class="etl-small">BPS base, max fee, max entries, max categories, batch limits, vitality scale, max remedies, max campaigns.</p>
+            <button type="button" class="etl-btn etl-btn-outline" id="etl-get-constants">Get constants</button>
+            <pre class="etl-output" id="etl-constants-output"></pre>
+          </div>
+        </div>
+
+        <div id="etl-panel-write" class="etl-panel">
+          <div class="etl-card">
+            <h3>Log herb (free)</h3>
+            <p style="font-size: 0.9rem; color: var(--etl-muted); margin-bottom: 0.75rem;">Requires: nameHash, benefitHash, categoryHash (bytes32). Hash strings off-chain (e.g. ethers.keccak256(ethers.toUtf8Bytes("Basil"))).</p>
+            <label class="etl-label">Name hash (0x...)</label>
+            <input type="text" class="etl-input" id="etl-log-name" placeholder="0x..." />
+            <label class="etl-label">Benefit hash (0x...)</label>
+            <input type="text" class="etl-input" id="etl-log-benefit" placeholder="0x..." />
+            <label class="etl-label">Category hash (0x...)</label>
+            <input type="text" class="etl-input" id="etl-log-category" placeholder="0x..." />
+            <button type="button" class="etl-btn etl-btn-primary" id="etl-log-herb">Log herb (free)</button>
+            <pre class="etl-output" id="etl-log-output"></pre>
+          </div>
+          <div class="etl-card">
+            <h3>Other write actions</h3>
+            <p class="etl-small">These require the contract ABI and your connected wallet. Implement in your app or use Etherscan/Remix.</p>
+            <ul class="etl-bullets">
+              <li><strong>logRemedy(titleHash, herbEntryIdRef)</strong> — Link a remedy title to an existing herb entry. You must own the entry or have created it.</li>
+              <li><strong>updateHerbBenefit(entryId, newBenefitHash)</strong> — Update the benefit hash of an entry. Only the contributor can call.</li>
+              <li><strong>attachWellnessNote(entryId, noteHash)</strong> — Attach a note hash to an entry. Contributor only.</li>
+              <li><strong>spendVitality(amount, reasonHash)</strong> — Deduct vitality from your balance with a reason hash (e.g. for rewards).</li>
+              <li><strong>joinEntryToCampaign(entryId, campaignId)</strong> — Join one of your entries to an active campaign. Campaign must be within start/end block.</li>
+            </ul>
+          </div>
+        </div>
+
+        <div id="etl-panel-config" class="etl-panel">
+          <div class="etl-card">
+            <h3>Contract config</h3>
+            <label class="etl-label">Herbo contract address</label>
+            <input type="text" class="etl-input" id="etl-contract-addr" placeholder="0x..." value="" />
+            <p style="font-size: 0.85rem; color: var(--etl-muted); margin-top: 0.5rem;">Set your deployed Herbo contract address. Immutable roles: curator, treasury, wellnessKeeper (see contract).</p>
+          </div>
+          <div class="etl-card">
+            <h3>Contract roles (immutable)</h3>
+            <ul class="etl-bullets">
+              <li><strong>curator</strong> — Registers categories, credits vitality (single or batch), creates campaigns. Set once at deploy.</li>
+              <li><strong>treasury</strong> — Receives donation fees from logHerb (optional wei) and swept treasury accum. Cannot be changed.</li>
+              <li><strong>wellnessKeeper</strong> — Can remove herb entries (keeperRemoveEntry) and remove remedies. Used for moderation.</li>
+              <li><strong>owner</strong> — Can pause the ledger, set vitalityPerEntry, set donationFeeBps, withdraw excess to treasury. Transferable via Ownable.</li>
+            </ul>
+            <p class="etl-small" style="margin-top: 0.75rem;">All constructor addresses are randomly generated per deployment and are not reused from other contracts.</p>
+            <h4 style="margin-top: 1rem; color: var(--etl-olive); font-size: 0.95rem;">Storage limits (constants)</h4>
+            <p class="etl-small">HRB_MAX_ENTRIES: 2500 · HRB_MAX_CATEGORIES: 180 · HRB_MAX_REMEDIES: 1200 · HRB_MAX_CAMPAIGNS: 95 · HRB_MAX_BATCH_LOG: 35 · HRB_MAX_BATCH_CREDIT: 45 · HRB_MAX_REMEDY_BATCH: 28 · HRB_MAX_FEE_BPS: 500. Use getConstants() to read from chain.</p>
